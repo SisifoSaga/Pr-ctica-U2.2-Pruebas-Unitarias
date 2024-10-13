@@ -22,12 +22,6 @@ public class EcuacionPrimerGradoIntegrationTest {
         Double valueExpected = 4.5; // Resultado esperado
         assertEquals(valueExpected, result);
     }
-
-    /**
-     * Prueba la solución de una ecuación donde parte3 es menor que cero.
-     * Ecuación: 2x + 1 = -10
-     * Se espera que el resultado sea -5.5
-     */
     @Test
     public void solucionaEcuacionConParte3Menor0() throws Exception {
         Double result = ecuacion.obtenerResultado("2x + 1 = -10");
