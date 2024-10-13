@@ -12,9 +12,9 @@ public class ParseadorTest {
      */
     @Test
     public void obtenerParte1Unidades() {
-        String ecuacion1 = "2x - 1 = 0"; // Define la ecuación a probar
-        int resultado = parseador.obtenerParte1(ecuacion1); // Llama al método obtenerParte1
-        assertEquals(2, resultado); // Verifica que el resultado sea igual a 2
+        String ecuacion = "2x - 1 = 0"; // Define la ecuación a probar
+        double resultado = parseador.obtenerParte1(ecuacion); // Llama al método obtenerParte1
+        assertEquals(2.0, resultado, 0.0001); // Verifica que el resultado sea igual a 2.0
     }
 
     /**
@@ -24,9 +24,9 @@ public class ParseadorTest {
      */
     @Test
     public void obtenerParte1Decenas() {
-        String ecuacion2 = "20x - 1 = 0"; // Define la ecuación a probar
-        int resultado = parseador.obtenerParte1(ecuacion2); // Llama al método obtenerParte1
-        assertEquals(20, resultado); // Verifica que el resultado sea igual a 20
+        String ecuacion = "20x - 1 = 0"; // Define la ecuación a probar
+        double resultado = parseador.obtenerParte1(ecuacion); // Llama al método obtenerParte1
+        assertEquals(20.0, resultado, 0.0001); // Verifica que el resultado sea igual a 20.0
     }
 
     /**
@@ -36,9 +36,9 @@ public class ParseadorTest {
      */
     @Test
     public void obtenerParte2Resta() {
-        String ecuacion1 = "2x - 1 = 0"; // Define la ecuación a probar
-        int resultado = parseador.obtenerParte2(ecuacion1); // Llama al método obtenerParte2
-        assertEquals(-1, resultado); // Verifica que el resultado sea igual a -1
+        String ecuacion = "2x - 1 = 0"; // Define la ecuación a probar
+        double resultado = parseador.obtenerParte2(ecuacion); // Llama al método obtenerParte2
+        assertEquals(-1.0, resultado, 0.0001); // Verifica que el resultado sea igual a -1.0
     }
 
     /**
@@ -48,9 +48,9 @@ public class ParseadorTest {
      */
     @Test
     public void obtenerParte2Suma() {
-        String ecuacion1 = "2x + 1 = 0"; // Define la ecuación a probar
-        int resultado = parseador.obtenerParte2(ecuacion1); // Llama al método obtenerParte2
-        assertEquals(1, resultado); // Verifica que el resultado sea igual a 1
+        String ecuacion = "2x + 1 = 0"; // Define la ecuación a probar
+        double resultado = parseador.obtenerParte2(ecuacion); // Llama al método obtenerParte2
+        assertEquals(1.0, resultado, 0.0001); // Verifica que el resultado sea igual a 1.0
     }
 
     /**
@@ -60,9 +60,9 @@ public class ParseadorTest {
      */
     @Test
     public void obtenerParte3Positivo() {
-        String ecuacion1 = "2x + 1 = 3"; // Define la ecuación a probar
-        int resultado = parseador.obtenerParte3(ecuacion1); // Llama al método obtenerParte3
-        assertEquals(3, resultado); // Verifica que el resultado sea igual a 3
+        String ecuacion = "2x + 1 = 3"; // Define la ecuación a probar
+        double resultado = parseador.obtenerParte3(ecuacion); // Llama al método obtenerParte3
+        assertEquals(3.0, resultado, 0.0001); // Verifica que el resultado sea igual a 3.0
     }
 
     /**
@@ -72,9 +72,9 @@ public class ParseadorTest {
      */
     @Test
     public void obtenerParte3Negativo() {
-        String ecuacion1 = "2x + 1 = -3"; // Define la ecuación a probar
-        int resultado = parseador.obtenerParte3(ecuacion1); // Llama al método obtenerParte3
-        assertEquals(-3, resultado); // Verifica que el resultado sea igual a -3
+        String ecuacion = "2x + 1 = -3"; // Define la ecuación a probar
+        double resultado = parseador.obtenerParte3(ecuacion); // Llama al método obtenerParte3
+        assertEquals(-3.0, resultado, 0.0001); // Verifica que el resultado sea igual a -3.0
     }
 
     /**
@@ -84,8 +84,8 @@ public class ParseadorTest {
      */
     @Test
     public void obtenerOperadorResta() {
-        String ecuacion2 = "2x - 1 = 0"; // Define la ecuación a probar
-        String operador = parseador.obtenerOperador(ecuacion2); // Llama al método obtenerOperador
+        String ecuacion = "2x - 1 = 0"; // Define la ecuación a probar
+        String operador = parseador.obtenerOperador(ecuacion); // Llama al método obtenerOperador
         assertEquals("-", operador); // Verifica que el operador sea igual a "-"
     }
 
@@ -96,8 +96,8 @@ public class ParseadorTest {
      */
     @Test
     public void obtenerOperadorSuma() {
-        String ecuacion2 = "2x + 1 = 0"; // Define la ecuación a probar
-        String operador = parseador.obtenerOperador(ecuacion2); // Llama al método obtenerOperador
+        String ecuacion = "2x + 1 = 0"; // Define la ecuación a probar
+        String operador = parseador.obtenerOperador(ecuacion); // Llama al método obtenerOperador
         assertEquals("+", operador); // Verifica que el operador sea igual a "+"
     }
 }
