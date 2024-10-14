@@ -1,91 +1,220 @@
-import static org.junit.jupiter.api.Assertions.assertEquals; // Importa método para verificar igualdad en JUnit 5
-import static org.mockito.Mockito.when; // Importa método para simular comportamiento en Mockito
+import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.jupiter.api.BeforeEach; // Importa la anotación para configurar antes de cada prueba
-import org.junit.jupiter.api.Test; // Importa la anotación Test de JUnit 5
-import org.mockito.InjectMocks; // Importa la anotación para inyectar mocks
-import org.mockito.Mock; // Importa la anotación para crear un mock
-import org.mockito.MockitoAnnotations; // Importa la clase para inicializar anotaciones de Mockito
+import static org.mockito.Mockito.*;
+
+
+
+import org.junit.jupiter.api.BeforeEach;
+
+import org.junit.jupiter.api.Test;
+
+import org.mockito.InjectMocks;
+
+import org.mockito.Mock;
+
+import org.mockito.MockitoAnnotations;
+
+
 
 public class EcuacionPrimerGradoMockitoTest {
 
-    @InjectMocks // Anotación que indica que los mocks se inyectarán en esta clase
-    private EcuacionPrimerGrado ecuacionPrimerGrado; // Instancia de la clase que se va a probar
 
-    @Mock // Anotación que indica que esta variable es un mock
-    private Parseador parseador; // Mock de la clase Parseador, que se usará para simular sus métodos
 
-    @BeforeEach // Método que se ejecuta antes de cada prueba
+    @InjectMocks
+
+    private EcuacionPrimerGrado ecuacionPrimerGrado;
+
+
+
+    @Mock
+
+    private Parseador parseador;
+
+
+
+    @BeforeEach
+
     public void inicializaMocks() {
-        MockitoAnnotations.openMocks(this); // Inicializa los mocks y inyecta los objetos necesarios
+
+        MockitoAnnotations.openMocks(this);
+
     }
 
+
+
+    @Test
+
+    public void solucionaEcuacionConMenos() throws Exception {
+
+        String ecuacion = "2x - 1 = 0";
+
+        when(parseador.obtenerParte1(ecuacion)).thenReturn(2.0);
+
+        when(parseador.obtenerParte2(ecuacion)).thenReturn(-1.0);
+
+        when(parseador.obtenerParte3(ecuacion)).thenReturn(0.0);
+
+
+
+        double result = ecuacionPrimerGrado.obtenerResultado(ecuacion);
+
+        double valueExpected = 0.5;
+
+        assertEquals(valueExpected, result, 0.0001); // Permite una pequeña diferencia en los valores de punto flotante
+
+    }
+
+
+
+    @Test
+
+    public void testObtenerResultadoExcepcion() {
+
+        String ecuacion = "0x + 1 = 0"; // Un caso que debe lanzar una excepción
+
+        when(parseador.obtenerParte1(ecuacion)).thenReturn(0.0);
+
+        when(parseador.obtenerParte2(ecuacion)).thenReturn(1.0);
+
+        when(parseador.obtenerParte3(ecuacion)).thenReturn(0.0);
+
+
+
+        Exception exception = assertThrows(Exception.class, () -> {
+
+            ecuacionPrimerGrado.obtenerResultado(ecuacion);
+
+        });
+
+
+
+        String expectedMessage = "La ecuación no tiene solución.";
+
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+
+    }
+
+
+
+    @Test
+
+    public void testObtenerResultadoConInfinitasSoluciones() {
+
+        String ecuacion = "0x + 0 = 0"; // Un caso que debe lanzar una excepción de infinitas soluciones
+
+        when(parseador.obtenerParte1(ecuacion)).thenReturn(0.0);
+
+        when(parseador.obtenerParte2(ecuacion)).thenReturn(0.0);
+
+        when(parseador.obtenerParte3(ecuacion)).thenReturn(0.0);
+
+
+
+        Exception exception = assertThrows(Exception.class, () -> {
+
+            ecuacionPrimerGrado.obtenerResultado(ecuacion);
+
+        });
+
+
+
+        String expectedMessage = "La ecuación tiene infinitas soluciones.";
+
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+
+    }
+
+
+
     /**
-     * Prueba la solución de una ecuación con un término negativo en el lado izquierdo.
-     * Ecuación: 2x - 1 = 0
+
+     * Prueba una ecuación con coeficiente decimal y verifica la interacción con el mock.
+
+     * Ecuación: 0.5x - 1 = 0
+
+     * Se espera que el resultado sea 2.0.
+
+     */
+
+    @Test
+
+    public void solucionaEcuacionConCoeficienteDecimal() throws Exception {
+
+        String ecuacion = "0.5x - 1 = 0";
+
+        when(parseador.obtenerParte1(ecuacion)).thenReturn(0.5);
+
+        when(parseador.obtenerParte2(ecuacion)).thenReturn(-1.0);
+
+        when(parseador.obtenerParte3(ecuacion)).thenReturn(0.0);
+
+
+
+        double result = ecuacionPrimerGrado.obtenerResultado(ecuacion);
+
+        double valueExpected = 2.0; // Resultado esperado
+
+        assertEquals(valueExpected, result, 0.0001); // Permite una pequeña diferencia en los valores de punto flotante
+
+
+
+        // Verifica que se haya llamado a los métodos del mock
+
+        verify(parseador).obtenerParte1(ecuacion);
+
+        verify(parseador).obtenerParte2(ecuacion);
+
+        verify(parseador).obtenerParte3(ecuacion);
+
+    }
+
+
+
+    /**
+
+     * Prueba una ecuación con parte3 decimal.
+
+     * Ecuación: 3x + 4 = 5.5
+
      * Se espera que el resultado sea 0.5
+
      */
+
     @Test
-    public void solucionaEcuacionConMenos() {
-        String ecuacion = "2x - 1 = 0"; // Define la ecuación a probar
-        // Configura el comportamiento del mock parseador
-        when(parseador.obtenerParte1(ecuacion)).thenReturn(2); // Simula el retorno de parte1
-        when(parseador.obtenerParte2(ecuacion)).thenReturn(-1); // Simula el retorno de parte2
-        when(parseador.obtenerParte3(ecuacion)).thenReturn(0); // Simula el retorno de parte3
-        Double result = ecuacionPrimerGrado.obtenerResultado(ecuacion); // Llama al método que se está probando
-        Double valueExpected = 0.5; // Resultado esperado
-        assertEquals(valueExpected, result); // Verifica que el resultado sea igual al esperado
+
+    public void solucionaEcuacionConParte3Decimal() throws Exception {
+
+        String ecuacion = "3x + 4 = 5.5";
+
+        when(parseador.obtenerParte1(ecuacion)).thenReturn(3.0);
+
+        when(parseador.obtenerParte2(ecuacion)).thenReturn(4.0);
+
+        when(parseador.obtenerParte3(ecuacion)).thenReturn(5.5);
+
+
+
+        double result = ecuacionPrimerGrado.obtenerResultado(ecuacion);
+
+        double valueExpected = 0.5; // Resultado esperado
+
+        assertEquals(valueExpected, result, 0.0001); // Permite una pequeña diferencia en los valores de punto flotante
+
+
+
+        // Verifica que se haya llamado a los métodos del mock
+
+        verify(parseador).obtenerParte1(ecuacion);
+
+        verify(parseador).obtenerParte2(ecuacion);
+
+        verify(parseador).obtenerParte3(ecuacion);
+
     }
 
-    /**
-     * Prueba la solución de una ecuación con un término positivo en el lado izquierdo.
-     * Ecuación: 2x + 1 = 0
-     * Se espera que el resultado sea -0.5
-     */
-    @Test
-    public void solucionaEcuacionConMas() {
-        String ecuacion = "2x + 1 = 0"; // Define la ecuación a probar
-        // Configura el comportamiento del mock parseador
-        when(parseador.obtenerParte1(ecuacion)).thenReturn(2); // Simula el retorno de parte1
-        when(parseador.obtenerParte2(ecuacion)).thenReturn(1); // Simula el retorno de parte2
-        when(parseador.obtenerParte3(ecuacion)).thenReturn(0); // Simula el retorno de parte3
-        Double result = ecuacionPrimerGrado.obtenerResultado(ecuacion); // Llama al método que se está probando
-        Double valueExpected = -0.5; // Resultado esperado
-        assertEquals(valueExpected, result); // Verifica que el resultado sea igual al esperado
-    }
-
-    /**
-     * Prueba la solución de una ecuación donde parte3 es mayor que cero.
-     * Ecuación: 2x + 1 = 10
-     * Se espera que el resultado sea 4.5
-     */
-    @Test
-    public void solucionaEcuacionConParte3Mayor0() {
-        String ecuacion = "2x + 1 = 10"; // Define la ecuación a probar
-        // Configura el comportamiento del mock parseador
-        when(parseador.obtenerParte1(ecuacion)).thenReturn(2); // Simula el retorno de parte1
-        when(parseador.obtenerParte2(ecuacion)).thenReturn(1); // Simula el retorno de parte2
-        when(parseador.obtenerParte3(ecuacion)).thenReturn(10); // Simula el retorno de parte3
-        Double result = ecuacionPrimerGrado.obtenerResultado(ecuacion); // Llama al método que se está probando
-        Double valueExpected = 4.5; // Resultado esperado
-        assertEquals(valueExpected, result); // Verifica que el resultado sea igual al esperado
-    }
-
-    /**
-     * Prueba la solución de una ecuación donde parte3 es menor que cero.
-     * Ecuación: 2x + 1 = -10
-     * Se espera que el resultado sea -5.5
-     */
-    @Test
-    public void solucionaEcuacionConParte3Menor0() {
-        String ecuacion = "2x + 1 = -10"; // Define la ecuación a probar
-        // Configura el comportamiento del mock parseador
-        when(parseador.obtenerParte1(ecuacion)).thenReturn(2); // Simula el retorno de parte1
-        when(parseador.obtenerParte2(ecuacion)).thenReturn(1); // Simula el retorno de parte2
-        when(parseador.obtenerParte3(ecuacion)).thenReturn(-10); // Simula el retorno de parte3
-        Double result = ecuacionPrimerGrado.obtenerResultado(ecuacion); // Llama al método que se está probando
-        Double valueExpected = -5.5; // Resultado esperado
-        assertEquals(valueExpected, result); // Verifica que el resultado sea igual al esperado
-    }
 }
 
